@@ -27,7 +27,7 @@ param_sdk_version=""
 param_cleanup_build_products=false
 param_target_name=""
 param_scheme_name=""
-param_force_xcodebuild=false
+param_force_xcodebuild=true
 
 build_tool="xcodebuild"
 log_dir=""
