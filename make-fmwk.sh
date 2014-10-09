@@ -7,7 +7,7 @@ SCRIPT_NAME=`basename $0`
 EXECUTION_DIR=`pwd`
 BUILD_DIR_COMMON="$EXECUTION_DIR/build"
 BUILD_DIR_32_BITS="$BUILD_DIR_COMMON/32-bits"
-BUILD_DIR_64_BITS="$BUILD_DIR_COMMON/64-bits"
+#BUILD_DIR_64_BITS="$BUILD_DIR_COMMON/64-bits"
 DEFAULT_BOOTSTRAP_FILE="$EXECUTION_DIR/bootstrap.txt"
 DEFAULT_OUTPUT_DIR="$HOME/StaticFrameworks"
 DEFAULT_PUBLIC_HEADERS_FILE="$EXECUTION_DIR/publicHeaders.txt"
@@ -509,21 +509,21 @@ if [ "$?" -ne "0" ]; then
     build_failure=true
 fi
 
-echo "Building $project_name simulator binaries (64-bits) for $configuration_name configuration (SDK $sdk_version)..."
-eval "$build_tool -configuration $configuration_name -project $project_name.xcodeproj ${target_name:+-target $target_name} -sdk iphonesimulator$sdk_version PHONEOS_DEPLOYMENT_TARGET=7.0 \
-    ${scheme_name:+-scheme $scheme_name} CONFIGURATION_BUILD_DIR='$BUILD_DIR_64_BITS' PRODUCT_NAME=Static-x64 ARCHS=x86_64 VALID_ARCHS=x86_64" &> "$log_dir/$framework_full_name-x64.buildlog" 
-if [ "$?" -ne "0" ]; then
-    echo "x64 build failed. Check the logs"
-    build_failure=true
-fi
+#echo "Building $project_name simulator binaries (64-bits) for $configuration_name configuration (SDK $sdk_version)..."
+#eval "$build_tool -configuration $configuration_name -project $project_name.xcodeproj ${target_name:+-target $target_name} -sdk iphonesimulator$sdk_version PHONEOS_DEPLOYMENT_TARGET=7.0 \
+#    ${scheme_name:+-scheme $scheme_name} CONFIGURATION_BUILD_DIR='$BUILD_DIR_64_BITS' PRODUCT_NAME=Static-x64 ARCHS=x86_64 VALID_ARCHS=x86_64" &> "$log_dir/$framework_full_name-x64.buildlog" 
+#if [ "$?" -ne "0" ]; then
+#    echo "x64 build failed. Check the logs"
+#    build_failure=true
+#fi
 
-echo "Building $project_name device binaries (64-bits) for $configuration_name configuration (SDK $sdk_version)..."
-eval "$build_tool -configuration $configuration_name -project $project_name.xcodeproj ${target_name:+-target $target_name} -sdk iphoneos$sdk_version IPHONEOS_DEPLOYMENT_TARGET=7.0 \
-    ${scheme_name:+-scheme $scheme_name} CONFIGURATION_BUILD_DIR='$BUILD_DIR_64_BITS' PRODUCT_NAME=Static-arm64 ARCHS=arm64 VALID_ARCHS=arm64" &> "$log_dir/$framework_full_name-arm64.buildlog"
-if [ "$?" -ne "0" ]; then
-    echo "arm64 build failed. Check the logs"
-    build_failure=true
-fi
+#echo "Building $project_name device binaries (64-bits) for $configuration_name configuration (SDK $sdk_version)..."
+#eval "$build_tool -configuration $configuration_name -project $project_name.xcodeproj ${target_name:+-target $target_name} -sdk iphoneos$sdk_version IPHONEOS_DEPLOYMENT_TARGET=7.0 \
+#    ${scheme_name:+-scheme $scheme_name} CONFIGURATION_BUILD_DIR='$BUILD_DIR_64_BITS' PRODUCT_NAME=Static-arm64 ARCHS=arm64 VALID_ARCHS=arm64" &> "$log_dir/$framework_full_name-arm64.buildlog"
+#if [ "$?" -ne "0" ]; then
+#    echo "arm64 build failed. Check the logs"
+#    build_failure=true
+#fi
 
 # Restore the original source code without bootstrapping code (only if source code not bundled, see above)
 if ! $param_source_files; then
@@ -567,7 +567,9 @@ mkdir -p "$headers_output_dir"
 # Packing static libraries as universal binaries. For the linker to be able to find the static unversal binaries in the 
 # framework bundle, the universal binaries must bear the exact same name as the framework
 echo "Packing binaries..."
-lipo -create "$BUILD_DIR_32_BITS/"*.a "$BUILD_DIR_64_BITS/"*.a -o "$dot_framework_output_dir/$framework_name"
+#lipo -create "$BUILD_DIR_32_BITS/"*.a "$BUILD_DIR_64_BITS/"*.a -o "$dot_framework_output_dir/$framework_name"
+lipo -create "$BUILD_DIR_32_BITS/"*.a -o "$dot_framework_output_dir/$framework_name"
+
 
 # Load the public header file list into an array (remove blank lines if anys)
 echo "Copying public header files..."
